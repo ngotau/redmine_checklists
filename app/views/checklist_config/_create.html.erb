@@ -1,0 +1,29 @@
+<% if User.current.allowed_to?(:create_checklists, @project) %>
+<%= form_tag(checklist_config_url(@project), :method => 'put') do%>
+<%end%>
+<%= form_for @project,
+            :url => { :action => 'modules', :id => @project },
+            :html => {:id => 'modules-form',
+                      :method => :post} do |f| %>
+<fieldset class="box tabular">
+  	<legend><%= l(:label_checklist_template) %>:</legend>
+ <div class="tabular">
+  <p id="checklist_form">
+    <label><%=l(:label_checklist_plural)%></label>
+		<% @project.project_checklists.build if @project.project_checklists.blank? || @project.project_checklists.last.subject.present? %>
+	  <%= fields_for :project, project do |f| -%>
+	    <span id="checklist_form_items" data-checklist-fields='<%= fields(f, :checklists) %>'>
+			  <%= f.fields_for :checklists do |builder| %>
+				<%= render :partial => 'checklist_fields', :locals => {:f => builder, :checklist => @checklist} %>
+			  <% end %>
+      </span>
+		<% end %>
+  </p>
+</div>
+ </fieldset>
+<% end %>
+<% content_for :header_tags do %>
+    <%= javascript_include_tag :checklists, :plugin => 'redmine_checklists'  %>
+    <%= stylesheet_link_tag :checklists, :plugin => 'redmine_checklists'  %>
+<% end %>
+<% end %>
