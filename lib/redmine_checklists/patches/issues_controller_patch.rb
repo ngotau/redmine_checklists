@@ -50,15 +50,23 @@ module RedmineChecklists
               return
             end
           else 
-            #Copy checklist from project
+            if params[:id].blank? && params[:issue].blank?
+                #Copy checklist from project
+                params[:issue] = {:checklists_attributes => {}}
+                @issue = Issue.new
+                @issue.tracker ||= @project.trackers.find((params[:issue] && params[:issue][:tracker_id]) || params[:tracker_id] || :first)
                 @project_checklists = ProjectChecklist.find :all,
                                                         :conditions => [ "project_id = ? AND tracker_id = ? ", @project,@issue.tracker],
                                                         :order => 'position'
-                @project_checklists.each_with_index do |checklist_item, index|
+                
+                @project_checklists.each do |checklist_item|
+                  puts checklist_item.subject
+                  index = checklist_item.id
                   params[:issue][:checklists_attributes][index.to_s] = {:is_done => checklist_item.is_done,
                                                                         :subject => checklist_item.subject,
                                                                         :position => checklist_item.position}
                 end
+             end
           end
           build_new_issue_from_params_without_checklist
         end

@@ -284,3 +284,13 @@ $(function(){
   $('span#checklist_form_items').checklist()
   $('#checklist_items').checklist()
 })
+
+$(document).ready(function(){
+	$('#issue_tracker_id').unbind('change');
+	$('#issue_tracker_id').off('change');
+	$('#issue_tracker_id').change(function() {
+		tracker_id = $('#issue_tracker_id').val()
+		url = window.location.href.split('?')[0]+"?tracker_id="+tracker_id
+		$(location).attr('href',url);
+	})
+})
