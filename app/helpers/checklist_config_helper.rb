@@ -9,7 +9,7 @@ module ChecklistConfigHelper
 
   def fields(f, association)
     @fields ||= f.fields_for(association, new_object(f, association), :child_index => "new_#{association}") do |builder|
-      render(association.to_s.singularize + "_fields", :f => builder)
+      render("checklist_config/" + association.to_s.singularize + "_fields", :f => builder)
     end
   end
 

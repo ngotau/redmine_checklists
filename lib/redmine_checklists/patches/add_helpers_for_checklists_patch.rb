@@ -27,6 +27,13 @@ module RedmineChecklists
         controller.send(:helper, 'checklists')
       end
     end
+    
+    module AddHelpersForChecklistConfigPatch
+      def self.apply(controller)
+        controller.send(:helper, 'checklist_config')
+      end
+    end
+    
   end
 end
 
@@ -34,7 +41,7 @@ end
   RedmineChecklists::Patches::AddHelpersForChecklistPatch.apply(controller)
 end
 [ProjectsController].each do |controller|
-  RedmineChecklists::Patches::AddHelpersForChecklistPatch.apply(controller)
+  RedmineChecklists::Patches::AddHelpersForChecklistConfigPatch.apply(controller)
 end
 
 

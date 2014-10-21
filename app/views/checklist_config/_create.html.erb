@@ -1,25 +1,36 @@
 <% if User.current.allowed_to?(:create_checklists, @project) %>
-<%= form_tag(checklist_config_url(@project), :method => 'put') do%>
-<%end%>
-
+<% if @project.trackers.blank?
+      flash[:error] = l(:error_no_tracker_in_project)
+ else
+ %>
+    
+<% @project.checklist_tracker_id = params[:tracker].nil? ? @project.trackers.first.id : params[:tracker] %>
+<%= form_tag(checklist_config_url(@project), :method => 'put',:id => 'checklist-form') do %>
 <fieldset class="box tabular">
-  	<legend><%= l(:label_checklist_template) %>:</legend>
+  	<legend><%= l(:label_checklist_default) %>:</legend>
  <div class="tabular">
+  <p id="checklist_tracker">
+  	<label for ="tracker"><%=l(:label_tracker)%></label>
+  	<%= select_tag "tracker", options_from_collection_for_select(@project.trackers, "id", "name",@project.checklist_tracker_id.to_i), :onchange => 'checklist_tracker()'%>
+  </p>
   <p id="checklist_form">
     <label><%=l(:label_checklist_plural)%></label>
 		<% @project.project_checklists.build if @project.project_checklists.blank? || @project.project_checklists.last.subject.present? %>
 	  <%= fields_for :project,@project do |f| -%>
 	    	<span id="checklist_form_items" data-checklist-fields='<%= fields(f, :project_checklists) %>'>
 			  <%= f.fields_for :project_checklists do |builder| %>
-				<%= render :partial => 'checklist_fields', :locals => {:f => builder, :project_checklist => @project_checklist} %>
+				<%= render :partial => 'checklist_config/project_checklist_fields', :locals => {:f => builder, :project_checklist => @project_checklist} %>
 			  <% end %>
       		</span>
 		<% end %>
   </p>
 </div>
  </fieldset>
+ <%= submit_tag l(:button_save) %>
 <% end %>
 <% content_for :header_tags do %>
-    <%= javascript_include_tag :checklists, :plugin => 'redmine_checklists'  %>
+    <%= javascript_include_tag :project_checklists, :plugin => 'redmine_checklists'  %>
     <%= stylesheet_link_tag :checklists, :plugin => 'redmine_checklists'  %>
 <% end %>
+<% end %>
+<%end%>

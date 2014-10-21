@@ -7,9 +7,12 @@ module RedmineChecklists
       def self.included(base) # :nodoc:
         base.class_eval do
           unloadable # Send unloadable so it will not be unloaded in development
-
-          has_many :project_checklists, :class_name => "ProjectChecklist", :dependent => :destroy, :inverse_of => :project,
-                   :order => 'position'
+          
+          attr_accessor :checklist_tracker_id
+          
+          has_many :project_checklists,:class_name => "ProjectChecklist", :dependent => :destroy, :inverse_of => :project,
+                   :order => 'position',
+                   :conditions => proc { "tracker_id = #{self.checklist_tracker_id}" }
 
           accepts_nested_attributes_for :project_checklists, :allow_destroy => true, :reject_if => :all_blank
 

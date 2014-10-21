@@ -1,7 +1,7 @@
 class ChecklistConfigController < ApplicationController
   unloadable
 
-  helper ChecklistsHelper
+  before_filter :find_project_by_project_id, :authorize
   
   accept_api_auth :index, :update, :destroy, :create, :show
   
@@ -30,17 +30,15 @@ class ChecklistConfigController < ApplicationController
   end
   
   def update
-    respond_to do |format|
-      format.api {
-        if @project_checklist_item.update_attributes(params[:project_checklist])
-          render_api_ok
-        else
-          render_validation_errors(@project_checklist_item)
-        end
-      }
+    tracker = params[:tracker]
+    checklists = params[:project][:project_checklists_attributes]
+    checklists.each do |key,param|
+      param[:tracker_id] = tracker
+      @project.checklist_tracker_id = tracker
+      @project.project_checklists_attributes = param
+      @project.save
     end
-  
-    redirect_to :controller => 'projects',:action => "settings", :id => @project, :tab => 'checklist'
+    redirect_to :controller => 'projects',:action => "settings", :id => @project, :tracker => tracker, :tab => 'checklist'
   end
   
   private

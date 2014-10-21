@@ -5,6 +5,7 @@ class CreateProjectChecklists < ActiveRecord::Migration
       t.integer :tracker_id
       t.string :subject
       t.integer :position, :default => 1
+      t.boolean :is_done, :default => false
       t.timestamp :created_at
       t.timestamp :updated_at
     end

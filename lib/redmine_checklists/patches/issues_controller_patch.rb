@@ -49,6 +49,16 @@ module RedmineChecklists
               render_404
               return
             end
+          else 
+            #Copy checklist from project
+                @project_checklists = ProjectChecklist.find :all,
+                                                        :conditions => [ "project_id = ? AND tracker_id = ? ", @project,@issue.tracker],
+                                                        :order => 'position'
+                @project_checklists.each_with_index do |checklist_item, index|
+                  params[:issue][:checklists_attributes][index.to_s] = {:is_done => checklist_item.is_done,
+                                                                        :subject => checklist_item.subject,
+                                                                        :position => checklist_item.position}
+                end
           end
           build_new_issue_from_params_without_checklist
         end

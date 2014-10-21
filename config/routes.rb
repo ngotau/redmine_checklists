@@ -18,9 +18,7 @@
 # along with redmine_checklists.  If not, see <http://www.gnu.org/licenses/>.
 
 RedmineApp::Application.routes.draw do
-  match '/projects/:project_id/checklist/settings',
-    :to => 'checklist_config#update', :via => :put,
-    :as => 'checklist_config'
+  match '/projects/:project_id/checklist/settings',:to => 'checklist_config#update', :via => :put,:as => 'checklist_config'
     
 end
 

@@ -5,7 +5,7 @@ en:
   label_checklist_save_log: Save changes to issue log
   label_checklist_done_ratio: Set issue done ratio
   label_checklist_menu_main: Checklist
-  label_checklist_template: Checklist template for this project
+  label_checklist_default: Default check list for tracker
   permission_view_checklists: View checklist
   permission_done_checklists: Done checklist items
   permission_edit_checklists: Edit checklist items
