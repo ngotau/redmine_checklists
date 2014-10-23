@@ -31,12 +31,14 @@ class ChecklistConfigController < ApplicationController
   
   def update
     tracker = params[:tracker]
-    checklists = params[:project][:project_checklists_attributes]
-    checklists.each do |key,param|
-      param[:tracker_id] = tracker
-      @project.checklist_tracker_id = tracker
-      @project.project_checklists_attributes = param
-      @project.save
+    if params[:project] !=nil
+      checklists = params[:project][:project_checklists_attributes] 
+      checklists.each do |key,param|
+        param[:tracker_id] = tracker
+        @project.checklist_tracker_id = tracker
+        @project.project_checklists_attributes = param
+        @project.save
+      end
     end
     redirect_to :controller => 'projects',:action => "settings", :id => @project, :tracker => tracker, :tab => 'checklist'
   end
